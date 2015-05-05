@@ -1,33 +1,33 @@
 module dct(
-	input clk,			                                                    //	input clock
-	input reset,		  	                                                //	reset
-	input wr,		                                                        //	writing data to memory
-	input oe,		                                                      	//	displaying the final output
-	input [7:0]data_in,	                                              	//	8-bit data input
-	input [2:0]add,		                                                  //	3-bit address for data input
-	output reg [7:0]data_out                                            //	8-bit data output
+	input clk,			                                   //	input clock
+	input reset,		  	                                   //	reset
+	input wr,		                                           //	writing data to memory
+	input oe,		                                           //	displaying the final output
+	input [7:0]data_in,	                                           //	8-bit data input
+	input [2:0]add,		                                           //	3-bit address for data input
+	output reg [7:0]data_out                                           //	8-bit data output
 	);	                                        
 
-wire signed [7:0] x01,x11,x21,x31,x41,x51,x61,x71;		                //	 wire for 1-stage butterfly
-wire signed [7:0] x02,x12,x22,x32,x42,x52,x62,x72;		                //	wire for 2-stage butterfly
-wire signed [7:0] x03,x13,x23,x33,x43,x53,x63,x73,x57,x56;            // wire for 3-stage butterfly
+wire signed [7:0] x01,x11,x21,x31,x41,x51,x61,x71;		            //	 wire for 1-stage butterfly
+wire signed [7:0] x02,x12,x22,x32,x42,x52,x62,x72;		            //	wire for 2-stage butterfly
+wire signed [7:0] x03,x13,x23,x33,x43,x53,x63,x73,x57,x56;                  // wire for 3-stage butterfly
 wire signed [15:0] x04,x14,x24,x34,x44,x54,x64;		                    // wire for output drivers
-wire signed [15:0] x55,x65,x75;                                       // intermediate stage values
-wire signed [31:0] x1,x2;                                             // partial products
-wire signed [15:0] xx1,xx2,xx3,xx4,xx5,xx6,yy1,yy2,yy3,yy4,yy5,yy6;   // partial products
+wire signed [15:0] x55,x65,x75;                                             // intermediate stage values
+wire signed [31:0] x1,x2;                                                   // partial products
+wire signed [15:0] xx1,xx2,xx3,xx4,xx5,xx6,yy1,yy2,yy3,yy4,yy5,yy6;         // partial products
 
-wire [7:0] 	c5= 8'd55,                                                // 0.55  // ci = cos (i*pi/2*N)
-		c6= 8'd38,                                                        // 0.38
-		c7= 8'd19;                                                        // 0.19
+wire [7:0] 	c5= 8'd55,                                                  // 0.55  // ci = cos (i*pi/2*N)
+		c6= 8'd38,                                                  // 0.38
+		c7= 8'd19;                                                  // 0.19
 		
-wire [7:0] 	s5=8'd83,                                                 // 0.83 // si = sin (i*pi/2*N)
-		s6=8'd92,                                                         // 0.92
-		s7=8'd98;                                                         // 0.98 
+wire [7:0] 	s5=8'd83,                                                   // 0.83 // si = sin (i*pi/2*N)
+		s6=8'd92,                                                   // 0.92
+		s7=8'd98;                                                   // 0.98 
 				
-wire [7:0] sqrt8_inv=8'd35;                                          // 0.35 
+wire [7:0] sqrt8_inv=8'd35;                                                 //0.35 
 wire [15:0] sqrt2=16'b0101_1001_1001_1001;
 
-reg [7:0]x[7:0];	//	8-bit 8 locations data storage after reading
+reg [7:0]x[7:0];	                                    //	8-bit 8 locations data storage after reading
 
 /****************************WRITING DATA TO MEMORY***********************/
 always @( posedge clk) 
